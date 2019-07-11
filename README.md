@@ -1,5 +1,9 @@
 # Reddit Username Availability Checker
 
+![](https://github.com/impshum/Reddit-Username-Availability-Checker/blob/master/ss.jpg?raw=true)
+
+### Install
+
 - Install requirements ```pip install -r requirements.txt```
 - Create app (type script) at https://old.reddit.com/prefs/apps/ and get the app id and app secret
 - Edit conf.ini with your keys
