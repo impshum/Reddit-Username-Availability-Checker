@@ -1,5 +1,7 @@
 import praw
+import prawcore
 import configparser
+
 
 config = configparser.ConfigParser()
 config.read('conf.ini')
@@ -7,34 +9,30 @@ client_id = config['REDDIT']['client_id']
 client_secret = config['REDDIT']['client_secret']
 
 
-class C:
-    W, G, R, P, Y, C = '\033[0m', '\033[92m', '\033[91m', '\033[95m', '\033[93m', '\033[36m'
-
-
 def main():
     reddit = praw.Reddit(client_id=client_id,
                          client_secret=client_secret,
-                         user_agent='Username checker (by /u/impshum)')
+                         user_agent='Username checker (by u/impshum)',
+                         timeout=3)
 
     with open('usernames_in.txt') as f:
-        targets = f.readlines()
+        targets = f.read().splitlines()
 
     winners = []
 
     for target in targets:
         try:
-            target = target.strip()
             user = reddit.redditor(target)
             if user.id:
-                print(f'{C.R}{target} is not available{C.W}')
-        except Exception:
+                print(f'{target} is not available')
+        except prawcore.exceptions.NotFound as e:
             winners.append(target)
-            print(f'{C.G}{target} is available{C.W}')
+            print(f'{target} is available')
 
-    with open('usernames_out.txt', 'w') as f:
+    with open('usernames_out.txt', 'w+') as f:
         f.write('\n'.join(winners))
 
-    print(f'\n{len(winners)} winners\n')
+    print(f'\n{len(winners)}/{len(targets)} usernames available\n')
 
 
 if __name__ == '__main__':
